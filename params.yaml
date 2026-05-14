@@ -1,0 +1,16 @@
+data:
+  raw_path: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+  test_size: 0.30
+  split_random_state: 17
+
+random_forest:
+  random_state: 46
+  cv_splits: 5
+
+catboost:
+  iterations: 500
+  learning_rate: 0.05
+  depth: 6
+  l2_leaf_reg: 3
+  random_seed: 46
+  early_stopping_rounds: 50
