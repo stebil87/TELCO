@@ -2,6 +2,11 @@ import os
 import json
 import shutil
 import pandas as pd
+import warnings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+
 
 os.makedirs("models", exist_ok=True)
 os.makedirs("results", exist_ok=True)

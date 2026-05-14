@@ -5,6 +5,10 @@ import pandas as pd
 from deepchecks.tabular import Dataset
 from deepchecks.tabular.suites import model_evaluation
 
+import warnings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 os.makedirs("deepchecks_reports", exist_ok=True)
 
 train_df = pd.read_csv("data/processed/train.csv")

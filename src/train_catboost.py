@@ -9,6 +9,10 @@ import pandas as pd
 from catboost import CatBoostClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
+import warnings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 os.makedirs("models", exist_ok=True)
 os.makedirs("results", exist_ok=True)
 
