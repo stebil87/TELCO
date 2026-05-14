@@ -4,3 +4,8 @@ share/
 Scripts/ 
 pyvenv.cfg 
 Include/ 
+catboost_info/ 
+dvc-storage/ 
+mlflow.db 
+mlruns/ 
+data\raw\WA_Fn-UseC_-Telco-Customer-Churn.csv 
