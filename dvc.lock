@@ -1,0 +1,182 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - path: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    - path: src/prepare.py
+      hash: md5
+      md5: 1c4fb0b6d846c9dd258b17694fd10b8b
+      size: 1970
+    params:
+      params.yaml:
+        data.raw_path: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
+        data.split_random_state: 17
+        data.test_size: 0.3
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 92f1c7dabf2a85e7f87daee51197b435
+      size: 244534
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 8b03e57ade61ddb6befe82fc71d6b249
+      size: 569443
+    - path: models/scaler.pkl
+      hash: md5
+      md5: f086c7a6d38c007fcfdcb871d877e037
+      size: 959
+  validate_data:
+    cmd: python src/validate_data.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 92f1c7dabf2a85e7f87daee51197b435
+      size: 244534
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 8b03e57ade61ddb6befe82fc71d6b249
+      size: 569443
+    - path: src/validate_data.py
+      hash: md5
+      md5: 22a279a7ef0b942417dd411c6ceaf03b
+      size: 951
+    outs:
+    - path: deepchecks_reports/data_integrity.html
+      hash: md5
+      md5: 387f17eef6aa01628743fa7c8629ae8f
+      size: 7782028
+    - path: deepchecks_reports/train_test_validation.html
+      hash: md5
+      md5: 35cdedf70eaa2086027a5c0e4a9832d6
+      size: 7857237
+  train_random_forest:
+    cmd: python src/train_random_forest.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 92f1c7dabf2a85e7f87daee51197b435
+      size: 244534
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 8b03e57ade61ddb6befe82fc71d6b249
+      size: 569443
+    - path: src/train_random_forest.py
+      hash: md5
+      md5: 6df99d5359680992cdfb9c325836f528
+      size: 2643
+    params:
+      params.yaml:
+        data.split_random_state: 17
+        random_forest:
+          random_state: 46
+          cv_splits: 5
+    outs:
+    - path: models/random_forest.pkl
+      hash: md5
+      md5: 04ff78daa22fef73763dbdd6a07b3c11
+      size: 10883017
+    - path: results/random_forest_metrics.json
+      hash: md5
+      md5: 2f9cc3eca73d46cf85901f6cd53da93e
+      size: 554
+  train_catboost:
+    cmd: python src/train_catboost.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 92f1c7dabf2a85e7f87daee51197b435
+      size: 244534
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 8b03e57ade61ddb6befe82fc71d6b249
+      size: 569443
+    - path: src/train_catboost.py
+      hash: md5
+      md5: e669b24c6bbe81e2171108173d2cde47
+      size: 2295
+    params:
+      params.yaml:
+        catboost:
+          iterations: 500
+          learning_rate: 0.05
+          depth: 6
+          l2_leaf_reg: 3
+          random_seed: 46
+          early_stopping_rounds: 50
+    outs:
+    - path: models/catboost.pkl
+      hash: md5
+      md5: f6a46c26c3237e93076836ff2ba25183
+      size: 81223
+    - path: results/catboost_metrics.json
+      hash: md5
+      md5: 255426fa6e512618632c3b6401ccb975
+      size: 180
+    - path: results/feature_importance.csv
+      hash: md5
+      md5: 057b2f775cc707b8b4b45615e79fc36f
+      size: 1213
+  select_best_model:
+    cmd: python src/select_best_model.py
+    deps:
+    - path: models/catboost.pkl
+      hash: md5
+      md5: f6a46c26c3237e93076836ff2ba25183
+      size: 81223
+    - path: models/random_forest.pkl
+      hash: md5
+      md5: 04ff78daa22fef73763dbdd6a07b3c11
+      size: 10883017
+    - path: results/catboost_metrics.json
+      hash: md5
+      md5: 255426fa6e512618632c3b6401ccb975
+      size: 180
+    - path: results/random_forest_metrics.json
+      hash: md5
+      md5: 2f9cc3eca73d46cf85901f6cd53da93e
+      size: 554
+    - path: src/select_best_model.py
+      hash: md5
+      md5: 07ae687363d43f62ba424ccfff1e6f39
+      size: 1063
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: f6a46c26c3237e93076836ff2ba25183
+      size: 81223
+    - path: results/best_model.json
+      hash: md5
+      md5: a3f93b4bed173b03d69d4e32ce998e93
+      size: 101
+    - path: results/model_comparison.csv
+      hash: md5
+      md5: f3dd3b9fde12fa468156ece4bf896039
+      size: 555
+  validate_model:
+    cmd: python src/validate_model.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 92f1c7dabf2a85e7f87daee51197b435
+      size: 244534
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 8b03e57ade61ddb6befe82fc71d6b249
+      size: 569443
+    - path: models/best_model.pkl
+      hash: md5
+      md5: f6a46c26c3237e93076836ff2ba25183
+      size: 81223
+    - path: src/validate_model.py
+      hash: md5
+      md5: 3c380180b60b7fdfc771e3a4f08485af
+      size: 1107
+    outs:
+    - path: deepchecks_reports/model_evaluation.html
+      hash: md5
+      md5: 67ad678bf07c18c505f999f5f54b8d39
+      size: 8079545
