@@ -21,6 +21,15 @@ stages:
     outs:
     - deepchecks_reports/data_integrity.html
     - deepchecks_reports/train_test_validation.html
+  validate_model:
+    cmd: python src/validate_model.py
+    deps:
+    - data/processed/test.csv
+    - data/processed/train.csv
+    - models/best_model.pkl
+    - src/validate_model.py
+    outs:
+    - deepchecks_reports/model_evaluation.html
   train_random_forest:
     cmd: python src/train_random_forest.py
     deps:
@@ -33,7 +42,8 @@ stages:
     outs:
     - models/random_forest.pkl
     metrics:
-    - results/random_forest_metrics.json
+    - results/random_forest_metrics.json:
+        cache: false
   train_catboost:
     cmd: python src/train_catboost.py
     deps:
@@ -44,9 +54,11 @@ stages:
     - catboost
     outs:
     - models/catboost.pkl
-    - results/feature_importance.csv
+    - results/feature_importance.csv:
+        cache: false
     metrics:
-    - results/catboost_metrics.json
+    - results/catboost_metrics.json:
+        cache: false
   select_best_model:
     cmd: python src/select_best_model.py
     deps:
@@ -57,15 +69,8 @@ stages:
     - src/select_best_model.py
     outs:
     - models/best_model.pkl
-    - results/model_comparison.csv
+    - results/model_comparison.csv:
+        cache: false
     metrics:
-    - results/best_model.json
-  validate_model:
-    cmd: python src/validate_model.py
-    deps:
-    - data/processed/test.csv
-    - data/processed/train.csv
-    - models/best_model.pkl
-    - src/validate_model.py
-    outs:
-    - deepchecks_reports/model_evaluation.html
+    - results/best_model.json:
+        cache: false
