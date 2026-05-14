@@ -9,8 +9,8 @@ stages:
       size: 977501
     - path: src/prepare.py
       hash: md5
-      md5: 1c4fb0b6d846c9dd258b17694fd10b8b
-      size: 1970
+      md5: aa3bdc26b83077b57704a2d7bb0941e6
+      size: 2053
     params:
       params.yaml:
         data.raw_path: data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv
