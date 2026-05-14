@@ -1,5 +1,0 @@
-{
-    "best_model": "CatBoost",
-    "selection_metric": "f1",
-    "best_f1": 0.6378006872852233
-}
