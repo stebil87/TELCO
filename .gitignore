@@ -1,0 +1,15 @@
+data/raw/*.csv
+data/processed/
+models/
+deepchecks_reports/
+mlflow.db
+mlruns/
+catboost_info/
+__pycache__/
+*.pyc
+.venv/
+etc/
+Lib/
+Scripts/
+share/
+Include/
